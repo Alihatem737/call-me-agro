@@ -1,0 +1,44 @@
+<div class="details-page step-layout">
+  <app-plan-header mode="GROWING MODE" />
+  <div class="step-progress">
+    <ol class="progress" aria-label="Plan steps">
+      @for (step of steps; track step; let index = $index) {
+        <li [attr.aria-current]="index === 1 ? 'step' : null" [class.completed]="index === 0"><span>{{ index === 0 ? '✓' : index + 1 }}</span>{{ step }}</li>
+      }
+    </ol>
+  </div>
+  <main tabindex="0" aria-label="Step content">
+    <div class="intro">
+      <p class="eyebrow">STEP 2 OF 3</p>
+      <h1>When did you start planting?</h1>
+      <p>Add your actual planting date. Harvest date is optional and can be added later.</p>
+    </div>
+    <form id="planting-date-form" [formGroup]="form" (ngSubmit)="submit()" novalidate>
+
+      <h2>Record your planting and harvest dates</h2>
+      <div class="date-fields">
+        <div class="field">
+          <label for="planted-on">PLANTED ON</label>
+          <input #plantingInput id="planted-on" type="date" formControlName="plantingDate" required [max]="today" [attr.aria-invalid]="form.controls.plantingDate.touched && form.controls.plantingDate.invalid" [attr.aria-describedby]="form.controls.plantingDate.touched && form.controls.plantingDate.invalid ? 'planting-error' : null" />
+          @if (form.controls.plantingDate.touched && form.controls.plantingDate.invalid) {
+            <p class="error" id="planting-error">{{ form.controls.plantingDate.hasError('required') ? 'Choose your actual planting date.' : form.controls.plantingDate.hasError('date') ? 'Enter a valid planting date.' : 'Planting date cannot be in the future.' }}</p>
+          }
+        </div>
+        <div class="field">
+          <label for="harvest-date">HARVEST DATE · OPTIONAL</label>
+          <input #harvestInput id="harvest-date" type="date" formControlName="harvestDate" [min]="form.controls.plantingDate.valid ? form.controls.plantingDate.value : ''" [attr.aria-invalid]="form.controls.harvestDate.touched && (form.controls.harvestDate.invalid || form.hasError('order'))" [attr.aria-describedby]="form.controls.harvestDate.touched && (form.controls.harvestDate.invalid || form.hasError('order')) ? 'harvest-error' : null" />
+          @if (form.controls.harvestDate.touched && (form.controls.harvestDate.invalid || form.hasError('order'))) {
+            <p class="error" id="harvest-error">{{ form.controls.harvestDate.hasError('date') ? 'Enter a valid harvest date.' : 'Harvest date cannot be before planting date.' }}</p>
+          }
+        </div>
+      </div>
+    </form>
+    @if (message) { <p class="status" role="status">{{ message }}</p> }
+  </main>
+  <footer>
+    <div class="footer-content">
+      <a routerLink="/create-plan/growing/farm-location"><img src="assets/create-plan/arrow-left.svg" width="19" height="19" alt="" />Back</a>
+      <button class="primary" type="submit" form="planting-date-form">Next: current crop<img src="assets/home/arrow-right-light.svg" width="19" height="19" alt="" /></button>
+    </div>
+  </footer>
+</div>

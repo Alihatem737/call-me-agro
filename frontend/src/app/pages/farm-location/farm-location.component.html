@@ -1,0 +1,37 @@
+<div class="details-page step-layout">
+  <app-plan-header [mode]="growing ? 'GROWING MODE' : 'PLANNING MODE'" />
+  <div class="step-progress">
+    <ol class="progress" aria-label="Plan steps">
+      @for (step of steps; track step; let index = $index) {
+        <li [attr.aria-current]="index === 0 ? 'step' : null"><span>{{ index + 1 }}</span>{{ step }}</li>
+      }
+    </ol>
+  </div>
+  <main tabindex="0" aria-label="Step content">
+    <div class="intro">
+      <p class="eyebrow">{{ growing ? 'FARM DETAILS' : 'DETAILS' }} · 2 OF 2</p>
+      <h1>{{ growing ? 'Where is your growing field?' : 'Where is your farm located?' }}</h1>
+      <p>{{ growing ? 'Select the exact location of your already planted field.' : 'Choose a point on the map to set the location of your field.' }}</p>
+    </div>
+    <form id="location-form" [formGroup]="form" (ngSubmit)="submit()" novalidate>
+      <app-farm-map class="location-map" [coordinates]="form.controls.coordinates.value" (locationSelected)="selectLocation($event)" />
+      <section class="location-details" aria-labelledby="location-heading">
+
+        <h2 id="location-heading">Select your field</h2>
+        <p>Click anywhere on the map to move the pin, or drag the pin to adjust it.</p>
+        <div class="selected-location" aria-live="polite">
+          <p class="eyebrow">SELECTED LOCATION</p>
+          <strong>{{ selectedLocation || 'No location selected' }}</strong>
+        </div>
+        @if (form.controls.coordinates.touched && form.controls.coordinates.invalid) { <p class="error" id="location-error" role="alert">Choose a location to continue.</p> }
+      </section>
+    </form>
+    @if (message) { <p class="status" role="status">{{ message }}</p> }
+  </main>
+  <footer>
+    <div class="footer-content">
+      <a [routerLink]="nameRoute"><img src="assets/create-plan/arrow-left.svg" width="19" height="19" alt="" />Back: name</a>
+      <button class="primary" type="submit" form="location-form">Next: {{ growing ? 'planting date' : 'planting window' }}<img src="assets/home/arrow-right-light.svg" width="19" height="19" alt="" /></button>
+    </div>
+  </footer>
+</div>

@@ -1,0 +1,43 @@
+<div class="details-page step-layout">
+  <app-plan-header mode="PLANNING MODE" />
+  <div class="step-progress">
+    <ol class="progress" aria-label="Plan steps">
+      @for (step of steps; track step; let index = $index) {
+        <li [attr.aria-current]="index === 1 ? 'step' : null" [class.completed]="index === 0"><span>{{ index === 0 ? '✓' : index + 1 }}</span>{{ step }}</li>
+      }
+    </ol>
+  </div>
+  <main tabindex="0" aria-label="Step content">
+    <div class="intro">
+      <p class="eyebrow">STEP 2 OF 5</p>
+      <h1>When would you like to start planting?</h1>
+      <p>Choose one planting date range for your whole farm.</p>
+    </div>
+    <form id="window-form" [formGroup]="form" (ngSubmit)="submit()" novalidate>
+
+      <h2>I plan to start planting between</h2>
+      <div class="date-fields">
+        <div class="field">
+          <label for="window-from">FROM</label>
+          <input #fromInput id="window-from" type="date" min="1981-01-01" formControlName="from" required [attr.aria-invalid]="form.controls.from.touched && form.controls.from.invalid" [attr.aria-describedby]="form.controls.from.touched && form.controls.from.invalid ? 'from-error' : null" />
+          @if (form.controls.from.touched && form.controls.from.invalid) { <p id="from-error" class="error">{{ form.controls.from.hasError('required') ? 'Choose a start date.' : 'Enter a valid start date.' }}</p> }
+        </div>
+        <div class="field">
+          <label for="window-to">TO</label>
+          <input #toInput id="window-to" type="date" formControlName="to" required [attr.aria-invalid]="form.controls.to.touched && (form.controls.to.invalid || form.hasError('order'))" [attr.aria-describedby]="form.controls.to.touched && (form.controls.to.invalid || form.hasError('order')) ? 'to-error' : null" />
+          @if (form.controls.to.touched && (form.controls.to.invalid || form.hasError('order'))) {
+            <p id="to-error" class="error">{{ form.controls.to.hasError('required') ? 'Choose an end date.' : form.controls.to.hasError('date') ? 'Enter a valid end date.' : 'The end date must be after the start date.' }}</p>
+          }
+        </div>
+      </div>
+      @if (form.touched && form.hasError('period')) { <p class="error" role="alert">Choose a start on or after 1981-01-01 and a range of no more than 366 days, including both dates.</p> }
+    </form>
+    @if (message) { <p class="status" role="status">{{ message }}</p> }
+  </main>
+  <footer>
+    <div class="footer-content">
+      <a routerLink="/create-plan/planning/farm-location"><img src="assets/create-plan/arrow-left.svg" width="19" height="19" alt="" />Back</a>
+      <button class="primary" type="submit" form="window-form">Next: choose crops<img src="assets/home/arrow-right-light.svg" width="19" height="19" alt="" /></button>
+    </div>
+  </footer>
+</div>

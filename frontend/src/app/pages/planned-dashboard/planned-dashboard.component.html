@@ -1,0 +1,91 @@
+<div class="dashboard" [class.growing-dashboard]="growing">
+  <app-plan-header [mode]="result.plan ? (growing ? 'GROWING' : 'PLANNED') : 'YOUR PLANS'" plansLabel="My Plans" />
+  <main tabindex="0" aria-label="Dashboard content">
+    @if (result.plan; as plan) {
+      <div class="plan-heading">
+        <div>
+          <h1>{{ plan.name }}</h1>
+          <p class="location">{{ plan.location }} · {{ plan.selectedCrop | titlecase }}</p>
+          <p class="saved">{{ growing ? 'Saved on this device' : '✓ Plan saved on this browser' }}</p>
+        </div>
+        <span class="badge confirmed">{{ growing ? 'CROP GROWING' : 'PLAN CONFIRMED' }}</span>
+      </div>
+      @if (plantingWindow; as window) { <p class="planting-window">PLANTING WINDOW: {{ dateValue(window.from) | date:'MMM d, y':'UTC' }} – {{ dateValue(window.to) | date:'MMM d, y':'UTC' }}</p> }
+      <div class="dates">
+        <section class="date-card" aria-labelledby="planting-heading">
+          <h2 id="planting-heading">PLANTING DATE</h2>
+          <div class="date-action"><strong>{{ dateValue(plan.plantingDate) ? (dateValue(plan.plantingDate) | date:'MMM d, y':'UTC') : 'Not added yet' }}</strong><button type="button" (click)="openTool('dates')">Edit<img src="assets/planned-dashboard/pencil.svg" width="19" height="19" alt="" /></button></div>
+        </section>
+        <section class="date-card" aria-labelledby="harvest-heading">
+          <h2 id="harvest-heading">HARVEST DATE</h2>
+          <div class="date-action"><strong>{{ dateValue(plan.harvestDate) ? (dateValue(plan.harvestDate) | date:'MMM d, y':'UTC') : 'Not added yet' }}</strong><button type="button" (click)="openTool('dates')">Edit<img src="assets/planned-dashboard/pencil.svg" width="19" height="19" alt="" /></button></div>
+          <p>Optional · add any time</p>
+        </section>
+      </div>
+      <section class="problems" aria-labelledby="problems-heading">
+        <div><h2 id="problems-heading">Crop problems</h2><p class="lead">{{ growing ? 'Is your crop showing any symptoms right now?' : 'You can record issues here once planting begins.' }}</p><p>{{ growing ? 'Choose a symptom from a short list to see simple next steps.' : 'This crop has not been marked as planted yet.' }}</p></div>
+        <div class="start-action">
+          @if (!growing) { <button class="primary" type="button" (click)="openTool('start')">I have started planting<img src="assets/home/arrow-right-light.svg" width="19" height="19" alt="" /></button> }
+          <button class="primary report-problem" type="button" (click)="openReport()">Report a problem<img src="assets/home/arrow-right-light.svg" width="19" height="19" alt="" /></button>
+        </div>
+      </section>
+      <section class="saved-reports" aria-labelledby="reports-heading">
+        <h2 id="reports-heading">Reported problems</h2>
+        @if (reportResult.error) {
+          <p role="alert">{{ reportResult.error }}</p><button type="button" (click)="reloadReports()">Try again</button>
+        } @else if (reportResult.reports.length === 0) {
+          <p>No problems reported for this plan yet.</p>
+        } @else {
+          <ul>
+            @for (report of reportResult.reports; track report.id) {
+              <li [class.resolved-report]="currentStatus(report.status) === 'resolved'">
+                <div class="report-row">
+                  <div><strong>{{ symptomName(report.symptom) }}</strong><span class="report-date">{{ report.crop | titlecase }} · {{ report.createdAt | date:'MMM d, y, HH:mm' }}</span></div>
+                  <select class="report-status" [class.resolved]="currentStatus(report.status) === 'resolved'" [value]="currentStatus(report.status)" [attr.aria-label]="'Status for ' + symptomName(report.symptom) + ' reported ' + report.createdAt" (change)="changeReportStatus(report, $event)">
+                    <option value="open">Open</option><option value="in-progress">In Progress</option><option value="resolved">Resolved</option>
+                  </select>
+                  <button class="view-report" type="button" (click)="viewReport(report)">View guidance<img src="assets/home/arrow-right-light.svg" width="19" height="19" alt="" /></button>
+                </div>
+                @if (reportErrors[report.id]) { <p class="report-error" role="alert">{{ reportErrors[report.id] }}</p> }
+              </li>
+            }
+          </ul>
+          @if (statusMessage) { <p role="status">{{ statusMessage }}</p> }
+        }
+      </section>
+      <section class="tools" aria-labelledby="tools-heading">
+        <h2 id="tools-heading">Agricultural tools</h2>
+        <div class="tool-buttons">
+          <button class="calculator-button" type="button" (click)="openTool('calculator')">Pesticide amount calculator<img src="assets/planned-dashboard/droplet.svg" width="19" height="19" alt="" /></button>
+          <button class="log-button" type="button" (click)="openTool('log')">Spray &amp; fertilizer log<img src="assets/planned-dashboard/clipboard.svg" width="19" height="19" alt="" /></button>
+        </div>
+        <p class="availability">Calculator: DEMO, no dosage provided.</p>
+      </section>
+      <section class="saved-reports care-log" aria-labelledby="care-heading">
+        <h2 id="care-heading">Spray &amp; fertilizer log</h2>
+        @if (careResult.error) { <p role="alert">{{ careResult.error }}</p><button type="button" (click)="refreshTools()">Try again</button> }
+        @else if (!careResult.entries.length) { <p>No care entries for this plan yet.</p> }
+        @else {
+          <ul>@for (entry of careResult.entries; track entry.id) {
+            <li><div class="report-row"><div><strong>{{ entry.product }}</strong><span class="report-date">{{ entry.type | titlecase }} · {{ entry.date | date:'MMM d, y':'UTC' }} · {{ entry.amount }} · {{ entry.crop | titlecase }}</span></div><button type="button" (click)="openTool('log', entry)">View / update entry</button></div></li>
+          }</ul>
+        }
+      </section>
+      <section class="research" aria-labelledby="research-heading">
+        <div><span class="badge">RESEARCH CONCEPT · COMING SOON</span><h2 id="research-heading">BioLogic — could future biology help protect crops?</h2><p>Explore an unproven research idea, not a treatment available today.</p></div>
+        <div><button class="biologic-button" type="button" [routerLink]="['/plans', plan.id, 'biologic']">Learn more<img src="assets/planned-dashboard/flask.svg" width="19" height="19" alt="" /></button></div>
+      </section>
+    } @else {
+      <section class="empty" aria-labelledby="empty-heading">
+        <h1 id="empty-heading">{{ result.error ? 'Plan unavailable' : 'Plan not found' }}</h1>
+        <p [attr.role]="result.error ? 'alert' : null">{{ result.error || 'This plan is not saved on this browser, or the link is incorrect.' }}</p>
+        @if (result.error) { <button type="button" (click)="reload()">Try again</button> }
+        <a routerLink="/my-plans">Back to My Plans</a>
+      </section>
+    }
+  </main>
+  @if (reportOpen && result.plan; as plan) {
+    <app-report-problem [planId]="plan.id" [crop]="plan.selectedCrop!" [planName]="plan.name" [savedReport]="viewingReport" (closed)="closeReport()" (selectionChanged)="updateReport($event)" (nextRequested)="updateReport($event)" (reportSaved)="reloadReports()" />
+  }
+  @if (tool && result.plan; as plan) { <app-dashboard-tool [plan]="plan" [tool]="tool!" [entry]="careEntry" (closed)="tool = null; careEntry = null" (changed)="refreshTools()" /> }
+</div>

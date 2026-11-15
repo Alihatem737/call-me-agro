@@ -1,0 +1,34 @@
+<div class="details-page step-layout">
+  <app-plan-header mode="PLANNING MODE" />
+  <div class="step-progress">
+    <ol class="progress" aria-label="Plan steps">
+      @for (step of steps; track step; let index = $index) {
+        <li [attr.aria-current]="index === 4 ? 'step' : null" [class.completed]="index < 4"><span>{{ index < 4 ? '✓' : index + 1 }}</span>{{ step }}</li>
+      }
+    </ol>
+  </div>
+  <main tabindex="0" aria-label="Step content">
+    <div class="intro">
+      <p class="eyebrow">STEP 5 OF 5</p>
+      <h1>Ready to save this plan?</h1>
+      <p>Check your details before saving.</p>
+    </div>
+    <dl class="summary">
+      <div><dt>PLAN NAME</dt><dd>{{ plan.name }}<a routerLink="/create-plan/planning/plan-name">Edit name</a></dd></div>
+      <div><dt>LOCATION</dt><dd>{{ plan.location }}<a routerLink="/create-plan/planning/farm-location">Edit location</a></dd></div>
+      <div><dt>PLANTING WINDOW</dt><dd>{{ (plan.plantingWindow.from + 'T00:00:00Z') | date:'MMM d, y':'UTC' }} – {{ (plan.plantingWindow.to + 'T00:00:00Z') | date:'MMM d, y':'UTC' }}<a routerLink="/create-plan/planning/planting-window">Edit dates</a></dd></div>
+      <div><dt>CROP TO PLANT</dt><dd>{{ plan.selectedCrop | titlecase }}<a routerLink="/create-plan/planning/recommendations">Edit crop</a></dd></div>
+    </dl>
+    <div class="save-note">
+      <p class="badge">STATUS AFTER CONFIRMATION: PLANNED</p>
+      <p>Your plan will be saved on this browser and device.</p>
+      @if (error) { <p class="error" role="alert">{{ error }}</p> }
+    </div>
+  </main>
+  <footer>
+    <div class="footer-content">
+      <a routerLink="/create-plan/planning/recommendations"><img src="assets/create-plan/arrow-left.svg" width="19" height="19" alt="" />Back</a>
+      <button class="primary" type="button" [disabled]="saving || saved" (click)="confirm()">{{ saved ? 'Plan saved' : saving ? 'Saving…' : 'Confirm this plan' }}<img src="assets/home/arrow-right-light.svg" width="19" height="19" alt="" /></button>
+    </div>
+  </footer>
+</div>

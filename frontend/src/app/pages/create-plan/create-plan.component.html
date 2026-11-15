@@ -1,0 +1,26 @@
+<div class="entry">
+  <app-plan-header />
+  <main>
+    <div class="intro">
+      <span class="badge start">START HERE</span>
+      <h1>What would you like to do?</h1>
+      <p>Choose the path that matches your farm today.</p>
+    </div>
+    <div class="choices">
+      <a routerLink="/create-plan/planning/plan-name" class="choice">
+        <span class="number">01</span>
+        <span class="badge">BEFORE PLANTING</span>
+        <h2>I am planning to plant</h2>
+        <p>Explore suitable crops, compare options and confirm a plan before growing.</p>
+        <span class="journey-link">Start this journey <img src="assets/home/arrow-right.svg" width="19" height="19" alt="" /></span>
+      </a>
+      <a routerLink="/create-plan/growing/plan-name" class="choice">
+        <span class="number growing">02</span>
+        <span class="badge">AFTER PLANTING</span>
+        <h2>I have already planted</h2>
+        <p>Track a growing crop and get simple support when a problem appears.</p>
+        <span class="journey-link">Start this journey <img src="assets/home/arrow-right.svg" width="19" height="19" alt="" /></span>
+      </a>
+    </div>
+  </main>
+</div>

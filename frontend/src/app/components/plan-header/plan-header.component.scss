@@ -1,0 +1,11 @@
+:host { display: block; background: white; }
+header { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px; min-height: clamp(64px, 8.89dvh, 80px); max-width: 1440px; margin: auto; padding: clamp(8px, 1.55dvh, 14px) clamp(24px, 4.5vw, 65px); }
+.brand, nav { display: flex; align-items: center; gap: 14px; }
+.brand { font: 600 28px 'Outfit', sans-serif; color: #0e3228; }
+a { text-decoration: none; }
+nav { gap: clamp(16px, 3vw, 44px); }
+nav a { color: #728477; font-size: 15px; font-weight: 600; }
+.mode { min-width: 158px; padding: 8px 13px; border-radius: 16px; background: #eef3ec; font-size: 12px; font-weight: 600; }
+.growing { background: #beeb52; }
+a:focus-visible { outline: 3px solid #0e3228; outline-offset: 4px; }
+@media (max-width: 600px) { .brand { font-size: 23px; } .mode { min-width: 0; } nav { flex-wrap: wrap; } }

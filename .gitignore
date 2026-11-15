@@ -1,0 +1,10 @@
+﻿**/node_modules/
+**/.angular/
+**/dist/
+**/target/
+**/.idea/
+**/.env
+**/.env.*
+!**/.env.example
+*.log
+**/application-local.properties

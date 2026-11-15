@@ -1,0 +1,11 @@
+<div class="farm-map">
+  <div #canvas class="map-canvas" role="region" aria-label="Farm location map. Click to select, drag to pan, or use arrow keys and Select map center." tabindex="0"></div>
+  <button class="select-center" type="button" (click)="selectCenter()">Select map center</button>
+  @if (loading && !tileError) { <span class="map-feedback" role="status">Loading map…</span> }
+  @if (tileError) {
+    <div class="map-feedback map-error" role="status">
+      <span>Map tiles could not be loaded. Check your connection.</span>
+      <button type="button" (click)="retryTiles()">Retry</button>
+    </div>
+  }
+</div>

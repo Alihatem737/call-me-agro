@@ -1,0 +1,10 @@
+.report-row { display: grid; grid-template-columns: minmax(0, 1fr) 194px 240px; gap: 20px; align-items: center; }
+.report-date { display: block; margin-top: 12px; overflow-wrap: anywhere; }
+.care-log .report-row { grid-template-columns: minmax(0, 1fr) 240px; }
+.report-status { min-height: 40px; width: 100%; border: 0; border-radius: 11px; padding: 10px 40px 10px 14px; color: #0e3228; background: #f5e8c4 url('../../../assets/report-status/chevron.svg') no-repeat right 12px center; background-size: 19px 19px; appearance: none; font: 600 14px 'DM Sans', sans-serif; cursor: pointer; }
+.report-status.resolved { background-color: #edf3ea; }
+.view-report { background: #0e3228; color: white; min-height: 55px; width: 100%; }
+.report-error { color: #a52a2a; font-size: 14px; }
+.report-status:focus-visible { outline: 3px solid #0e3228; outline-offset: 3px; }
+@media (max-width: 900px) { .report-row { grid-template-columns: minmax(0, 1fr) 194px; } .view-report { grid-column: 1 / -1; } }
+@media (max-width: 600px) { .report-row, .care-log .report-row { grid-template-columns: minmax(0, 1fr); } }

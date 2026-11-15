@@ -1,0 +1,41 @@
+<dialog #dialog [class.guidance-dialog]="step === 2" aria-labelledby="report-heading" aria-describedby="report-context report-help" (close)="onClose()">
+  <header>
+    <span class="badge">{{ step === 1 ? '1 OF 2 · CHOOSE A PROBLEM' : 'General guidance' }}</span>
+    <button #closeButton class="close" type="button" aria-label="Close report a problem" (click)="close()">✕</button>
+    <h2 id="report-heading">{{ step === 1 ? 'What problem is your crop showing?' : selectedSymptom?.name }}</h2>
+    <p id="report-context">{{ planName }} · {{ crop | titlecase }}</p>
+    @if (savedReport; as report) {
+      <p class="saved-details">Reported {{ report.createdAt | date:'MMM d, y, HH:mm' }} · {{ statusLabel(report.status) }}</p>
+    }
+    <p id="report-help">{{ step === 1 ? 'Choose one visible symptom.' : 'These are general management steps, not a confirmed diagnosis.' }}</p>
+  </header>
+  <div class="content">
+    @if (step === 1) {
+    <fieldset [attr.aria-describedby]="attempted && !selected ? 'symptom-error' : null">
+      <legend>Choose one visible symptom</legend>
+      <div class="symptoms">
+        @for (symptom of symptoms; track symptom.id) {
+          <label class="symptom" [class.selected]="selected === symptom.id">
+            <input #firstOption type="radio" name="report-symptom" [value]="symptom.id" [checked]="selected === symptom.id" (change)="select(symptom.id)" />
+            <span class="mark" aria-hidden="true">{{ selected === symptom.id ? '✓' : '' }}</span>
+            <span class="description"><strong>{{ symptom.name }}</strong>@if (symptom.id === 'leaf-spots') { <span>{{ symptom.description }}</span> }</span>
+          </label>
+        }
+      </div>
+    </fieldset>
+    @if (attempted && !selected) { <p id="symptom-error" class="error" role="alert">Choose one symptom before continuing.</p> }
+    @if (message) { <p class="status" role="status">{{ message }}</p> }
+    } @else {
+        <ol class="guidance">
+          @for (item of guidance; track item.title; let index = $index) {
+            <li><span class="number">0{{ index + 1 }}</span><div><h3>{{ item.title }}</h3><p>{{ item.text }}</p></div></li>
+          }
+        </ol>
+      @if (error) { <p class="error" role="alert">{{ error }}</p> }
+    }
+  </div>
+  <footer>
+    <button type="button" [disabled]="saving || saved" (click)="step === 1 ? close() : back()"><img src="assets/create-plan/arrow-left.svg" width="19" height="19" alt="" />{{ step === 1 ? 'Cancel' : 'Back to list' }}</button>
+    <button class="next" [class.ready]="selected" type="button" [disabled]="saving || saved" (click)="savedReport ? close() : step === 1 ? next() : save()">{{ savedReport ? (savedReport.status === 'resolved' ? 'Return to resolved issue' : 'Return to problem') : step === 1 ? (selected ? 'Next' : 'Choose symptom first') : (saved ? 'Problem saved' : saving ? 'Saving…' : 'Save problem & return') }}<img src="assets/home/arrow-right-light.svg" width="19" height="19" alt="" /></button>
+  </footer>
+</dialog>

@@ -1,0 +1,15 @@
+<svg preserveAspectRatio="none" overflow="visible" style="display: block;" width="71" height="71" viewBox="0 0 71 71" fill="none" xmlns="http://www.w3.org/2000/svg">
+<g id="Editable crop marker">
+<rect width="71" height="71" rx="16" fill="#EEF3EC"/>
+<g id="Produce illustration / Onion" clip-path="url(#clip0_0_13)">
+<path id="Vector" d="M33.7222 10.6111C31.9444 20.3889 22.1667 24.8333 18.6111 34.6111C14.1667 48.8333 23.9444 58.6111 36.3889 58.6111C50.6111 58.6111 58.6111 48.8333 54.1667 34.6111C50.6111 23.9444 39.0556 18.6111 33.7222 10.6111Z" fill="#C99ACE" stroke-width="2" stroke="#9A6DAB"/>
+<path id="Vector_2" opacity="0.8" d="M34.6111 15.0556C31.9444 26.6111 26.6111 36.3889 26.6111 47.9444M34.6111 19.5C35.5 32.8333 35.5 42.6111 34.6111 56.8333M39.9444 19.5C43.5 31.0556 47.0556 40.8333 46.1667 48.8333" stroke-width="2" stroke="#AF7CBD"/>
+<path id="Vector_3" d="M33.7222 10.6111C31.0556 6.16667 31.9444 4.38889 31.9444 0.833333M35.5 10.6111C37.2778 5.27778 39.0556 3.5 39.9444 1.72222" stroke-width="3" stroke-linecap="round" stroke="#4F9159"/>
+</g>
+</g>
+<defs>
+<clipPath id="clip0_0_13">
+<rect width="64" height="64" fill="white" transform="translate(3.5 3.5)"/>
+</clipPath>
+</defs>
+</svg>

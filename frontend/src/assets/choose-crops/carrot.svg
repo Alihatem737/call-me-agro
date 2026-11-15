@@ -1,0 +1,18 @@
+<svg preserveAspectRatio="none" overflow="visible" style="display: block;" width="71" height="71" viewBox="0 0 71 71" fill="none" xmlns="http://www.w3.org/2000/svg">
+<g id="Editable crop marker">
+<rect width="71" height="71" rx="16" fill="#EEF3EC"/>
+<g id="Produce illustration / Carrot" clip-path="url(#clip0_0_40)">
+<path id="Vector" d="M26.6111 21.2778C17.7222 16.8333 11.5 7.94444 14.1667 3.5C23.0556 5.27778 28.3889 10.6111 32.8333 19.5M30.1667 19.5C27.5 10.6111 31.0556 3.5 37.2778 3.5C41.7222 7.05556 39.9444 14.1667 34.6111 21.2778M31.9444 22.1667C38.1667 9.72222 47.0556 7.05556 52.3889 10.6111C50.6111 18.6111 42.6111 22.1667 36.3889 24.8333" fill="#55A66D" stroke-width="2" stroke="#367E4C"/>
+<path id="Vector_2" d="M27.5 20.3889C18.6111 23.9444 16.8333 34.6111 21.2778 42.6111C24.8333 49.7222 29.2778 55.9444 30.1667 64.8333C38.1667 55.0556 47.9444 45.2778 51.5 36.3889C55.0556 27.5 49.7222 18.6111 39.9444 17.7222C34.6111 17.7222 31.0556 18.6111 27.5 20.3889Z" fill="#EF9845" stroke-width="2" stroke="#CB702A"/>
+<g id="Vector_3">
+<path d="M24.8333 33.7222L31.9444 36.3889ZM38.1667 27.5L46.1667 29.2778ZM30.1667 46.1667L38.1667 47.9444ZM31.9444 54.1667L36.3889 52.3889Z" fill="black"/>
+<path d="M24.8333 33.7222L31.9444 36.3889M38.1667 27.5L46.1667 29.2778M30.1667 46.1667L38.1667 47.9444M31.9444 54.1667L36.3889 52.3889" stroke-width="2.4" stroke-linecap="round" stroke="#D97A34"/>
+</g>
+</g>
+</g>
+<defs>
+<clipPath id="clip0_0_40">
+<rect width="64" height="64" fill="white" transform="translate(3.5 3.5)"/>
+</clipPath>
+</defs>
+</svg>

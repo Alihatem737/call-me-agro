@@ -1,0 +1,28 @@
+<div class="article-shell">
+  <header><a class="brand" routerLink="/"><img src="assets/create-plan/logo.png" width="49" height="49" alt="" />call me agro</a><a class="back" [routerLink]="result.plan ? ['/plans', id, 'dashboard'] : ['/my-plans']">{{ result.plan ? 'العودة للوحة التحكم ←' : 'العودة إلى خططي ←' }}</a></header>
+  <main #articleMain tabindex="0" lang="ar" dir="rtl">
+    @if (result.plan) {
+      <article>
+        <section class="hero" aria-labelledby="article-title">
+          <img src="assets/biologic/hero.png" width="1220" height="516" alt="تصور فني لحقل بطاطس وطماطم وجذور نباتية، وليس دليلًا على نتائج بحثية" fetchpriority="high" />
+          <div class="hero-copy"><span class="badge" dir="ltr">BIOLOGIC / 2026</span><h1 id="article-title">هل يمكن لعلم الأحياء<br />أن يحمي محاصيل الغد؟</h1><p>تصور بحثي يستكشف مستقبل حماية البطاطس والطماطم من اللفحة المتأخرة، وما بين الطموح العلمي والمسؤولية البيئية.</p><small>الزراعة المستدامة / البيولوجيا التركيبية</small></div>
+        </section>
+        <div class="introduction"><p class="eyebrow">رؤية علمية مستقبلية • BIOLOGIC</p><h2>عندما تصبح مكافحة المرض سؤالًا جديدًا</h2><p>من خطر اللفحة المتأخرة إلى فكرة إعادة توجيه الوظائف البيولوجية للممرض: ما الذي نعرفه، وما الذي لا يزال في نطاق البحث؟</p><p class="experimental">تصور تجريبي غير مثبت — ليس علاجًا معتمدًا أو منتجًا متاحًا.</p></div>
+        <div class="reading-layout">
+          <aside aria-label="محتويات المقال"><h2>محتويات المقال</h2>@for (section of sections; track section.id) { <button type="button" (click)="jump(section.id)">{{ section.label }}</button> }<button type="button" (click)="jump('references')">المراجع</button></aside>
+          <div class="body-copy">
+            @for (section of sections; track section.id; let index = $index) {
+              <section [id]="section.id" tabindex="-1"><p class="eyebrow" dir="ltr">0{{ index + 1 }} / BIOLOGIC</p><h2>{{ section.heading }}</h2>@for (paragraph of section.paragraphs; track paragraph) { <p>{{ paragraph }}</p> }</section>
+              @if (index === 2) { <div class="logic"><div><b dir="ltr">IF</b><h3>إذا ظهرت إشارات جذور النبات</h3><p>استشعار سياق بيولوجي محدد</p></div><div><b dir="ltr">THEN</b><h3>استجابة بحثية مقترحة</h3><p>خفض الضرر واستكشاف وظائف نافعة</p></div></div> }
+            }
+            <section class="disclaimer"><h2>ملاحظة علمية مهمة</h2><p>هذه الصفحة تستعرض تصورًا بحثيًا مستقبليًا، ولا تصف منتجًا متاحًا أو علاجًا مثبتًا أو تعليمات لتعديل ممرضات النبات أو إطلاقها في الحقول.</p></section>
+            <section id="references" tabindex="-1"><h2>المراجع والخلفية العامة</h2><p>المصادر التالية للخلفية العلمية والسلامة، وليست إثباتًا لفاعلية تصور BioLogic.</p><ul><li><a href="https://gd.eppo.int/taxon/PHYTIN" target="_blank" rel="noopener noreferrer">EPPO — Phytophthora infestans</a></li><li><a href="https://www.cbd.int/biosafety" target="_blank" rel="noopener noreferrer">بروتوكول قرطاجنة للسلامة الأحيائية</a></li></ul></section>
+          </div>
+        </div>
+        <footer dir="ltr"><strong>call me agro</strong><span>BioLogic / Research concept</span><span>© 2026 — Call Me Agro</span></footer>
+      </article>
+    } @else {
+      <section class="missing"><h1>{{ result.error ? 'تعذر تحميل الخطة' : 'الخطة غير موجودة' }}</h1><p role="alert">{{ result.error || 'هذه الخطة غير محفوظة على هذا المتصفح.' }}</p>@if (result.error) { <button type="button" (click)="reload()">حاول مرة أخرى</button> }<a routerLink="/my-plans">العودة إلى خططي</a></section>
+    }
+  </main>
+</div>

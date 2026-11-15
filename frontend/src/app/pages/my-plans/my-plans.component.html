@@ -1,0 +1,59 @@
+<div class="workspace">
+  <header>
+    <a class="brand" routerLink="/" aria-label="Call me Agro home">
+      <img src="assets/home/logo.png" width="55" height="55" alt="" />
+      <span>call me agro</span>
+    </a>
+  </header>
+  <main>
+    <div class="intro">
+      <h1>My Plans</h1>
+      <p>Pick up where you left off, or start a new growing plan.</p>
+    </div>
+    @if (result.error) {
+      <div class="storage-error" role="alert">
+        <p>{{ result.error }}</p>
+        <button type="button" (click)="reload()">Try again</button>
+      </div>
+    }
+    @if (justSaved) { <p role="status">Your plan has been saved on this browser.</p> }
+    <div class="cards" [class.is-empty]="result.plans.length === 0">
+      @for (plan of visiblePlans; track plan.id) {
+        <article class="plan-card">
+          <div class="plan-photo">
+            <img src="assets/my-plans/farm.png" width="390" height="224" alt="Aerial view of agricultural fields" />
+            <span class="badge">{{ plan.status === 'growing' || plan.journey === 'already-planted' ? 'GROWING' : 'PLANNING' }}</span>
+          </div>
+          <div class="plan-details">
+            <h2>{{ plan.name }}</h2>
+            <p>{{ plan.location }}</p>
+            <button class="open-plan" type="button" [routerLink]="['/plans', plan.id, 'dashboard']">Open plan <span aria-hidden="true">↗</span></button>
+          </div>
+        </article>
+      }
+      @if (result.plans.length === 0) {
+        <section class="empty-state" aria-labelledby="empty-heading">
+          <h2 id="empty-heading">{{ result.error ? 'Plans unavailable' : 'No plans yet' }}</h2>
+          <p>{{ result.error ? 'Try loading your saved plans again.' : 'Your saved plans will appear here. Start a new plan when you are ready.' }}</p>
+        </section>
+      }
+      <section class="new-plan" aria-labelledby="new-plan-heading">
+        <span class="plus" aria-hidden="true">+</span>
+        <h2 id="new-plan-heading">Start a new plan</h2>
+        <p>Planning to plant or already planted? Choose the journey that fits you.</p>
+        <button type="button" routerLink="/create-plan">
+          <span>Create New Plan</span>
+          <img src="assets/home/arrow-right.svg" width="19" height="19" alt="" />
+        </button>
+      </section>
+    </div>
+    @if (pageCount > 1) {
+      <nav class="pagination" aria-label="Saved plan pages">
+        <button type="button" [disabled]="page === 0" (click)="page = page - 1">Previous</button>
+        <span aria-live="polite">Page {{ page + 1 }} of {{ pageCount }}</span>
+        <button type="button" [disabled]="page + 1 === pageCount" (click)="page = page + 1">Next</button>
+      </nav>
+    }
+  </main>
+  <footer>Your plans are saved on this browser and device.</footer>
+</div>

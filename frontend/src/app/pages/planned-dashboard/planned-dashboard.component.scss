@@ -1,0 +1,54 @@
+:host { display: block; }
+.dashboard { height: 100dvh; display: grid; grid-template-rows: auto minmax(0, 1fr); }
+main { min-height: 0; overflow-y: auto; overscroll-behavior-y: contain; padding: clamp(28px, 6.9dvh, 62px) clamp(24px, 5.3vw, 77px) 30px; width: 100%; max-width: 1440px; margin: auto; height: 100%; }
+h1, h2, p { margin: 0; }
+h1 { font-size: clamp(30px, 2.85vw, 41px); line-height: 1.25; overflow-wrap: anywhere; }
+.plan-heading { display: flex; justify-content: space-between; align-items: flex-start; gap: 20px; }
+.location { margin-top: 14px; color: #728477; font-size: 16px; overflow-wrap: anywhere; }
+.saved { margin-top: 5px; color: #728477; font-size: 14px; font-weight: 600; }
+.badge { display: inline-block; border-radius: 16px; padding: 8px 13px; background: #eef3ec; font-size: 12px; font-weight: 600; }
+.confirmed { min-width: 225px; margin-top: 16px; }
+.growing-dashboard .confirmed { background: #beeb52; }
+.growing-dashboard .dates { margin-top: 14px; }
+.planting-window { margin: 12px 0; color: #728477; font-size: 13px; line-height: 1.5; }
+.dates, .tool-buttons { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 20px; }
+.date-card, .problems, .tools { background: white; border: 1px solid #dce6dd; border-radius: 18px; }
+.date-card { min-height: 136px; padding: 18px 21px; }
+.date-card h2 { color: #728477; font-size: 12px; }
+.date-action { display: flex; align-items: center; justify-content: space-between; gap: 16px; margin: 15px 0 8px; }
+strong { font-size: 23px; }
+button, a { font: 600 16px 'DM Sans', sans-serif; color: #0e3228; }
+button { display: inline-flex; align-items: center; justify-content: space-between; gap: 20px; padding: 12px 18px; min-height: 49px; border: 1px solid #dce6dd; border-radius: 13px; background: white; text-align: left; }
+button img { flex-shrink: 0; }
+button:disabled { cursor: not-allowed; }
+.date-action button { min-width: 119px; }
+.date-card p, .availability { font-size: 13px; color: #728477; line-height: 1.5; }
+.availability { margin-top: 7px; }
+.problems { min-height: 178px; margin-top: 18px; padding: 16px 23px; display: grid; grid-template-columns: minmax(0, 1fr) minmax(260px, 293px); gap: 24px; align-items: start; }
+h2 { font-size: 24px; line-height: 1.4; }
+.problems p { color: #728477; font-size: 14px; line-height: 1.5; margin-top: 12px; }
+.problems .lead { font-size: 17px; font-weight: 600; color: #1c352c; }
+.start-action { margin-top: 36px; }
+.primary { width: 100%; background: #0e3228; color: white; min-height: 55px; }
+.start-action .primary + .report-problem { margin-top: 8px; }
+.start-action p { font-size: 12px; margin-top: 6px; }
+.tools { margin-top: 20px; padding: 12px 20px 15px; }
+.tools h2, .research h2 { font-size: 21px; }
+.tool-buttons { margin-top: 12px; gap: 28px; }
+.tool-buttons button { background: #eef3ec; min-height: 54px; }
+.research { display: grid; grid-template-columns: minmax(0, 1fr) 229px; align-items: center; gap: 24px; padding: 15px 20px; border-radius: 19px; background: #0e3228; color: white; margin-top: 22px; }
+.research .badge { background: #beeb52; color: #0e3228; }
+.research h2 { margin-top: 6px; }
+.research p { color: #c3d8c9; font-size: 13px; line-height: 1.5; margin-top: 4px; }
+.research button { width: 100%; min-height: 52px; }
+.empty { display: grid; gap: 20px; max-width: 700px; padding-block: 30px; }
+.empty button { justify-self: start; cursor: pointer; }
+.empty p { line-height: 1.5; }
+.saved-reports { margin-top: 20px; padding: 20px; border: 1px solid #dce6dd; border-radius: 18px; background: white; }
+.saved-reports p { margin-top: 12px; line-height: 1.5; }
+.saved-reports ul { list-style: none; padding: 0; margin: 12px 0 0; display: grid; gap: 12px; }
+.saved-reports li { display: grid; gap: 6px; padding-block: 12px; border-top: 1px solid #dce6dd; }
+.saved-reports strong { font-size: 17px; overflow-wrap: anywhere; }
+.saved-reports span { font-size: 13px; color: #728477; }
+button:focus-visible, a:focus-visible, main:focus-visible { outline: 2px solid #0e3228; outline-offset: -2px; }
+@media (max-width: 760px) { .plan-heading { flex-wrap: wrap; } .dates, .tool-buttons, .problems, .research { grid-template-columns: minmax(0, 1fr); } .start-action { margin-top: 0; } .confirmed { margin-top: 0; } .date-action { flex-wrap: wrap; } }

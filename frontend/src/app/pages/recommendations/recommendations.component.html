@@ -1,0 +1,79 @@
+<div class="report-page step-layout">
+  <app-plan-header mode="PLANNING MODE" />
+  <div class="step-progress">
+    <ol class="progress" aria-label="Plan steps">
+      @for (step of steps; track step; let index = $index) {
+        <li [attr.aria-current]="index === 3 ? 'step' : null" [class.completed]="index < 3"><span>{{ index < 3 ? '✓' : index + 1 }}</span>{{ step }}</li>
+      }
+    </ol>
+  </div>
+  <main tabindex="0" aria-label="Step content">
+    <div class="intro">
+      <p class="eyebrow">STEP 4 OF 5</p>
+      <h1>Compare your crop options</h1>
+      <p>Choose one crop to plant after reviewing the preliminary air-temperature comparison.</p>
+    </div>
+    <form id="recommendations-form" (submit)="$event.preventDefault(); submit()" novalidate>
+      <section class="comparison" aria-labelledby="suggestions-heading" aria-describedby="assessment-notice" [attr.aria-busy]="loading">
+        <div class="comparison-heading">
+          <h2 id="suggestions-heading">Crop suggestions</h2>
+          <span class="badge">PRELIMINARY COMPARISON</span>
+        </div>
+        @if (loading) { <p role="status">Loading NASA climate data and crop comparisons...</p> }
+        @if (error) { <p class="error" role="alert">{{ error }}</p><button class="choose" type="button" (click)="load()">Retry comparison</button> }
+        <div class="crop-options" role="group" aria-label="Choose one crop" [attr.aria-describedby]="attempted && !selected ? 'selection-error' : null">
+          @for (crop of crops; track crop.id) {
+            <div class="crop-row">
+              <h3>{{ crop.name }}</h3>
+              <span class="badge suitability" >{{ crop.suitability }}</span>
+              <p class="detail">{{ crop.detail }}</p>
+              <button #firstChoice class="choose" type="button" [attr.aria-pressed]="selected === crop.id" [class.chosen]="selected === crop.id" (click)="select(crop.id)">{{ selected === crop.id ? '✓ Selected: ' + crop.name : 'Plan ' + crop.name }}</button>
+            </div>
+          }
+        </div>
+        <p id="assessment-notice" class="mock-notice">Preliminary air-temperature comparison only. Not validated agricultural advice, a final planting recommendation, a ranking or a guarantee of success.</p>
+        @if (response; as assessment) { <p class="mock-notice">{{ assessment.assessmentBasis }} {{ assessment.limitations }}</p> }
+      </section>
+      @if (response; as assessment) {
+        <section class="panel climate" aria-labelledby="climate-heading">
+          <div class="comparison-heading"><h2 id="climate-heading">NASA climate summary</h2><span class="badge">{{ assessment.climate.summary.dataStatus }}</span></div>
+          <p>Requested planting window: {{ assessment.climate.requestedPeriod.start }} to {{ assessment.climate.requestedPeriod.end }} ({{ assessment.climate.requestedDays }} days).</p>
+          <p>Historical source period: {{ assessment.climate.summary.period.start }} to {{ assessment.climate.summary.period.end }} &middot; {{ assessment.climate.summary.source }} &middot; {{ assessment.climate.summary.timeStandard }}</p>
+          @if (assessment.climate.dataMode === 'HISTORICAL_ESTIMATE') {
+            <p class="notice">Historical estimate, not a forecast. Future-period data uses one comparable historical period, not predicted weather or a multi-year climate normal.</p>
+          } @else { <p>Historical observations, not a forecast.</p> }
+          <p>{{ assessment.climate.method }}</p>
+          @if (assessment.climate.summary.hasMissingData) { <p class="notice" role="status">Some NASA observations are missing. Available values only are shown; missing values are not zero or estimated.</p> }
+          @if (assessment.climate.summary.dataStatus === 'NO_VALID_DATA') { <p class="notice" role="status">No valid climate observations are available for this period. Crop labels indicate insufficient temperature evidence.</p> }
+          <dl class="climate-values">
+            <div><dt>Mean daily air temperature</dt><dd>{{ measurement(assessment.climate.summary.temperature.average, assessment.climate.summary.temperature.unit) }} &middot; {{ assessment.climate.summary.temperature.validDays }}/{{ assessment.climate.summary.expectedDays }} days</dd></div>
+            <div><dt>Lowest / highest daily mean</dt><dd>{{ measurement(assessment.climate.summary.temperature.minimumTemperature, assessment.climate.summary.temperature.unit) }} / {{ measurement(assessment.climate.summary.temperature.maximumTemperature, assessment.climate.summary.temperature.unit) }}</dd></div>
+            <div><dt>Rainfall total {{ assessment.climate.summary.precipitation.completePeriod ? '' : '(available days only)' }}</dt><dd>{{ measurement(assessment.climate.summary.precipitation.totalPrecipitation, assessment.climate.summary.precipitation.unit) }} &middot; {{ assessment.climate.summary.precipitation.validDays }}/{{ assessment.climate.summary.expectedDays }} days</dd></div>
+            <div><dt>Average relative humidity</dt><dd>{{ measurement(assessment.climate.summary.relativeHumidity.average, assessment.climate.summary.relativeHumidity.unit) }} &middot; {{ assessment.climate.summary.relativeHumidity.validDays }}/{{ assessment.climate.summary.expectedDays }} days</dd></div>
+            <div><dt>Average solar radiation</dt><dd>{{ measurement(assessment.climate.summary.solarRadiation.average, assessment.climate.summary.solarRadiation.unit) }} &middot; {{ assessment.climate.summary.solarRadiation.validDays }}/{{ assessment.climate.summary.expectedDays }} days</dd></div>
+          </dl>
+          <p>{{ assessment.climate.summary.temperature.basis }} {{ assessment.climate.summary.precipitation.basis }}</p>
+        </section>
+      }
+      <div class="support-panels">
+        <section class="panel" aria-labelledby="change-heading">
+          <h2 id="change-heading">Not happy with these suggestions?</h2>
+          <p>Change your crops or planting dates and compare again.</p>
+          <a class="change-crops" routerLink="/create-plan/planning/choose-crops">Change crops<img src="assets/recommendations/rotate.svg" width="19" height="19" alt="" /></a>
+        </section>
+        <section class="panel" aria-labelledby="consider-heading">
+          <h2 id="consider-heading">Things to consider</h2>
+          <p>Weather risk and crop rotation depend on local conditions. Potato and tomato share a plant family.</p>
+        </section>
+      </div>
+      @if (attempted && !selected) { <p class="error" id="selection-error" role="alert">Choose one crop to continue.</p> }
+      @if (message) { <p class="status" role="status">{{ message }}</p> }
+    </form>
+  </main>
+  <footer>
+    <div class="footer-content">
+      <a routerLink="/create-plan/planning/choose-crops"><img src="assets/create-plan/arrow-left.svg" width="19" height="19" alt="" />Back</a>
+      <button class="next" [class.ready]="selected && response" [disabled]="loading || !response || !!error" type="submit" form="recommendations-form">{{ selected ? 'Next: confirm' : 'Choose a crop above' }}</button>
+    </div>
+  </footer>
+</div>

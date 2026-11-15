@@ -1,0 +1,31 @@
+<div class="details-page step-layout">
+  <app-plan-header [mode]="growing ? 'GROWING MODE' : 'PLANNING MODE'" />
+  <div class="step-progress">
+    <ol class="progress" aria-label="Plan steps">
+      @for (step of steps; track step; let index = $index) {
+        <li [attr.aria-current]="index === 0 ? 'step' : null"><span>{{ index + 1 }}</span>{{ step }}</li>
+      }
+    </ol>
+  </div>
+  <main tabindex="0" aria-label="Step content">
+    <div class="intro">
+      <p class="eyebrow">{{ growing ? 'FARM DETAILS' : 'DETAILS' }} · 1 OF 2</p>
+      <h1>{{ growing ? 'What should we call your field?' : 'What should we call your farm?' }}</h1>
+      <p>{{ growing ? 'Name the field you have already planted. Choose its location next.' : 'Give your plan a name. You will choose the field location next.' }}</p>
+    </div>
+    <form id="farm-form" [formGroup]="form" (ngSubmit)="submit()" novalidate>
+      <div class="field">
+        <label for="plan-name">PLAN NAME</label>
+        <input #nameInput id="plan-name" formControlName="name" [placeholder]="growing ? 'North Field' : 'e.g. North Field'" autocomplete="off" required [attr.aria-invalid]="form.controls.name.touched && form.controls.name.invalid" [attr.aria-describedby]="form.controls.name.touched && form.controls.name.invalid ? 'name-error' : null" />
+        @if (form.controls.name.touched && form.controls.name.invalid) { <p id="name-error" class="error">Enter a plan name.</p> }
+      </div>
+
+    </form>
+  </main>
+  <footer>
+    <div class="footer-content">
+      <a routerLink="/create-plan"><img src="assets/create-plan/arrow-left.svg" width="19" height="19" alt="" />Back</a>
+      <button class="primary" type="submit" form="farm-form">Next: choose location<img src="assets/home/arrow-right-light.svg" width="19" height="19" alt="" /></button>
+    </div>
+  </footer>
+</div>

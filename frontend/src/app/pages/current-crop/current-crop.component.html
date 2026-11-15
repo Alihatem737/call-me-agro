@@ -1,0 +1,38 @@
+<div class="crops-page step-layout">
+  <app-plan-header mode="GROWING MODE" />
+  <div class="step-progress">
+    <ol class="progress" aria-label="Plan steps">
+      @for (step of steps; track step; let index = $index) {
+        <li [attr.aria-current]="index === 2 ? 'step' : null" [class.completed]="index < 2"><span>{{ index < 2 ? '✓' : index + 1 }}</span>{{ step }}</li>
+      }
+    </ol>
+  </div>
+  <main tabindex="0" aria-label="Step content">
+    <div class="intro">
+      <p class="eyebrow">STEP 3 OF 3</p>
+      <h1 id="current-crop-heading">What crop have you planted?</h1>
+      <p id="current-crop-help">Choose your current crop.</p>
+    </div>
+    <form id="current-crop-form" (submit)="$event.preventDefault(); submit()" novalidate>
+      <div class="crop-grid" role="group" aria-labelledby="current-crop-heading" [attr.aria-describedby]="attempted && !selected ? 'current-crop-help current-crop-error' : 'current-crop-help'">
+        @for (crop of crops; track crop) {
+          <button #firstCrop class="crop-card" type="button" [class.selected]="selected === crop" [attr.aria-pressed]="selected === crop" (click)="select(crop)">
+            <img [src]="'assets/choose-crops/' + crop + '.svg'" width="71" height="71" alt="" />
+            <span class="crop-name">{{ crop | titlecase }}</span>
+            <span class="crop-state">{{ selected === crop ? '✓  Selected' : 'Select crop' }}</span>
+          </button>
+        }
+      </div>
+      <p class="selection-count" role="status">{{ selected ? '1 CROP SELECTED' : '0 CROPS SELECTED' }}</p>
+      @if (attempted && !selected) { <p class="error" id="current-crop-error" role="alert">Choose one current crop to continue.</p> }
+      @if (message) { <p class="status" role="status">{{ message }}</p> }
+      @if (error) { <p class="error" role="alert">{{ error }}</p> }
+    </form>
+  </main>
+  <footer>
+    <div class="footer-content">
+      <a routerLink="/create-plan/growing/planting-date"><img src="assets/create-plan/arrow-left.svg" width="19" height="19" alt="" />Back</a>
+      <button class="primary" type="submit" form="current-crop-form" [disabled]="saving || saved">{{ saved ? 'Plan saved' : saving ? 'Saving…' : 'Create plan & open dashboard' }}<img src="assets/home/arrow-right-light.svg" width="19" height="19" alt="" /></button>
+    </div>
+  </footer>
+</div>

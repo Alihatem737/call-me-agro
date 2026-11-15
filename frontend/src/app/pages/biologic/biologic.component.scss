@@ -1,0 +1,36 @@
+@font-face { font-family: 'Noto Sans Arabic'; src: url('../../../assets/biologic/noto-sans-arabic.ttf') format('truetype'); font-weight: 100 900; font-display: swap; }
+:host { display: block; background: #edf3ef; padding: 20px 26px; height: 100dvh; }
+.article-shell { height: 100%; background: white; border-radius: 28px; display: flex; flex-direction: column; max-width: 1364px; margin: auto; color: #0e352a; }
+header { display: flex; justify-content: space-between; align-items: center; flex-shrink: 0; gap: 16px; margin: 0 5%; padding: 24px 0; border-bottom: 1px solid #e4ece6; }
+.brand { display: inline-flex; align-items: center; gap: 16px; font-size: 26px; font-weight: 700; text-decoration: none; }
+.back { background: #0e352a; color: white; border-radius: 14px; padding: 12px 18px; font-size: 14px; text-decoration: none; }
+main { overflow-y: auto; min-height: 0; padding: 32px 5% 0; font-family: 'Noto Sans Arabic', 'DM Sans', Tahoma, sans-serif; line-height: 2.1; }
+.back { font-family: 'Noto Sans Arabic', Tahoma, sans-serif; }
+.hero { position: relative; min-height: 516px; overflow: hidden; border-radius: 28px; background: #082d25; color: white; }
+.hero > img { position: absolute; width: 100%; height: 100%; object-fit: cover; inset: 0; }
+.hero-copy { position: relative; min-height: 516px; padding: 40px 40px 24px; width: 52%; background: rgba(8,45,37,.6); }
+.badge { display: inline-block; padding: 5px 16px; background: #bced55; color: #082d25; border-radius: 16px; font-size: 13px; font-weight: 700; }
+h1 { font-size: clamp(28px, 3.1vw, 44px); line-height: 1.65; margin: 36px 0 20px; }
+.hero p { font-size: 18px; line-height: 1.95; }
+.hero small { display: block; margin-top: 22px; font-size: 13px; }
+.introduction { max-width: 900px; margin: 30px 0 40px auto; border-top: 4px solid #bced55; padding-top: 24px; }
+.introduction h2 { font-size: clamp(26px, 2.6vw, 37px); }
+.introduction p { color: #668075; font-size: 19px; }
+.experimental { font-weight: 700; }
+.eyebrow { color: #668075; font-size: 13px !important; }
+.reading-layout { display: grid; grid-template-columns: minmax(0, 1fr) 230px; gap: 40px; }
+aside { grid-column: 2; grid-row: 1; border-right: 2px solid #e4ece6; padding-right: 20px; align-self: start; }
+aside h2 { font-size: 16px; }
+aside button { display: block; border: 0; background: none; color: #668075; margin: 12px 0; padding: 8px 0; font: inherit; font-size: 14px; text-align: right; cursor: pointer; }
+.body-copy { grid-column: 1; grid-row: 1; min-width: 0; }
+.body-copy section { border-bottom: 1px solid #e4ece6; padding-bottom: 20px; margin-bottom: 36px; scroll-margin-top: 16px; }
+.body-copy h2 { font-size: 30px; line-height: 1.8; }
+.body-copy p { font-size: 18px; line-height: 2.1; }
+.logic { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 14px; background: #eff5ec; border-radius: 18px; padding: 20px; margin: 0 0 36px; }
+.logic > div { background: white; border-radius: 12px; padding: 12px; }
+.logic h3 { font-size: 17px; margin: 8px 0; }.logic p { font-size: 14px; color: #668075; margin: 0; }
+.disclaimer { background: #eff5ec; border-radius: 15px; padding: 24px 28px; }.disclaimer h2 { font-size: 19px; }
+a { color: inherit; overflow-wrap: anywhere; } a:focus-visible, button:focus-visible { outline: 3px solid #668075; outline-offset: 3px; }
+footer { border-top: 1px solid #e4ece6; display: flex; flex-wrap: wrap; justify-content: space-between; gap: 20px; padding: 30px 0; font: 13px 'DM Sans', sans-serif; } footer strong { font-size: 24px; }
+.missing { padding: 30px; }
+@media(max-width: 760px) { :host { padding: 8px; } header { padding: 16px 0; } .brand { font-size: 18px; gap: 8px; } .brand img { width: 36px; height: 36px; } .back { padding: 8px; font-size: 12px; } main { padding-top: 20px; } .hero-copy { width: 100%; padding: 24px; background: rgba(8,45,37,.76); } .reading-layout { display: flex; flex-direction: column; gap: 24px; } .logic { grid-template-columns: minmax(0,1fr); } .body-copy h2 { font-size: 25px; } .body-copy p { font-size: 17px; } }

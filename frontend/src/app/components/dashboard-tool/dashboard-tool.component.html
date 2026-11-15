@@ -1,0 +1,44 @@
+<dialog #dialog (close)="onClose()" aria-labelledby="tool-title" aria-describedby="tool-context">
+  <header><h2 id="tool-title">{{ title }}</h2><button type="button" aria-label="Close dialog" (click)="close()">×</button></header>
+  <div class="content">
+    <p id="tool-context" class="context">{{ plan.name }} · {{ plan.selectedCrop | titlecase }}</p>
+    @if (success) {
+      <p class="success" role="status">{{ tool === 'log' ? 'Your entry is saved on this browser. You can view it in your care log.' : 'Your plan changes are saved on this browser.' }}</p>
+    } @else if (tool === 'calculator') {
+      <p>Use only a product approved for your crop and follow its official label.</p>
+      <span class="badge">DEMO · NO DOSAGE CALCULATED</span>
+      <form id="tool-form" [formGroup]="calculator" (ngSubmit)="submit()" novalidate>
+        <label>FIELD AREA (HECTARES)<input type="number" formControlName="area" min="0.000001" step="any" placeholder="Enter field area" [attr.aria-invalid]="attempted && calculator.controls.area.invalid" /></label>
+        <label>VERIFIED LABEL RATE<input formControlName="rate" maxlength="160" placeholder="Enter label rate and units" [attr.aria-invalid]="attempted && calculator.controls.rate.invalid" /></label>
+      </form>
+      @if (result) {
+        <div class="notice" role="status"><h3>Calculation unavailable</h3><p>No chemical quantity is calculated or recommended.</p><p>Check the official product label or consult a licensed agronomist. Do not guess a dosage.</p></div>
+      } @else { <p class="notice">Check the official label for the approved crop, rate, units and application instructions.</p> }
+    } @else if (tool === 'log') {
+      <p>Record what was applied. This is a log, not a treatment recommendation.</p>
+      <form id="tool-form" [formGroup]="log" (ngSubmit)="submit()" novalidate>
+        <label>ENTRY TYPE<select formControlName="type" [attr.aria-invalid]="attempted && log.controls.type.invalid"><option value="">Spray / Fertilizer</option><option value="spray">Spray</option><option value="fertilizer">Fertilizer</option></select></label>
+        <label>DATE APPLIED<input type="date" formControlName="date" [max]="today" required [attr.aria-invalid]="attempted && log.controls.date.invalid" /></label>
+        <label>PRODUCT NAME<input formControlName="product" maxlength="160" placeholder="Product on label" required [attr.aria-invalid]="attempted && log.controls.product.invalid" /></label>
+        <label>AMOUNT AND UNITS<input formControlName="amount" maxlength="100" placeholder="Enter the actual amount and units" required [attr.aria-invalid]="attempted && log.controls.amount.invalid" /></label>
+      </form>
+    } @else {
+      <p>{{ tool === 'start' ? 'Your plan will switch from Planned to Growing. You can update the date later.' : 'Update these dates at any time. Harvest date is optional.' }}</p>
+      <form id="tool-form" [class.single-field]="tool === 'start'" [formGroup]="dates" (ngSubmit)="submit()" novalidate>
+        <label>{{ tool === 'start' ? 'ACTUAL PLANTING DATE · OPTIONAL' : 'PLANTING DATE' }}<input type="date" formControlName="plantingDate" [max]="tool === 'start' || plan.status === 'growing' ? today : null" /></label>
+        @if (tool !== 'start') { <label>HARVEST DATE · OPTIONAL<input type="date" formControlName="harvestDate" [min]="dates.controls.plantingDate.value" /></label> }
+      </form>
+      @if (tool === 'start') { <p class="notice">If you have not planted yet, keep this plan in Planned status.</p> }
+    }
+    @if (error) { <p class="error" role="alert">{{ error }}</p> }
+  </div>
+  <footer>
+    @if (success) { <button class="primary" type="button" (click)="close()">Return to dashboard</button> }
+    @else {
+      <button type="button" (click)="result ? (result = false) : close()">{{ result ? 'Back to calculator' : tool === 'calculator' || viewing ? 'Close' : tool === 'start' ? 'Not yet' : 'Cancel' }}</button>
+      @if (viewing) { <button class="primary" type="button" (click)="edit()">Update entry</button> }
+      @else if (result) { <button class="primary" type="button" (click)="close()">Close</button> }
+      @else { <button class="primary" type="submit" form="tool-form">{{ tool === 'calculator' ? 'Check label requirements' : tool === 'log' ? (error ? 'Retry save' : 'Save entry') : tool === 'start' ? 'Yes, switch to Growing' : 'Save dates' }}</button> }
+    }
+  </footer>
+</dialog>
