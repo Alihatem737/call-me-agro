@@ -1,0 +1,11 @@
+Local backend launch (Java 17)
+
+Build with Java 17: .\mvnw.cmd package
+Launch/restart from the backend directory:
+powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\start-local.ps1 -Restart
+
+The launcher explicitly reads .idea/earthdata.env, requires exactly one non-empty EARTHDATA_TOKEN assignment, and passes it through the child process environment. Spring resolves the existing satellite.earthdata-token property. The token is never passed as a command-line argument. The secret is Git-ignored. Logs and verification responses are under ignored target/.
+
+Only the BackendApplication or backend JAR listening on port 8080 may be stopped. Another application on that port causes the launcher to fail.
+
+NASA HLS protected asset downloads can return HTTP 303 to the approved CloudFront distribution. The downloader follows that signed URL without forwarding the Earthdata bearer token. Other redirect hosts are rejected.
