@@ -29,6 +29,16 @@
           <button class="primary report-problem" type="button" (click)="openReport()">Report a problem<img src="assets/home/arrow-right-light.svg" width="19" height="19" alt="" /></button>
         </div>
       </section>
+      @if (growing) {
+        <section class="tools satellite-monitoring" aria-labelledby="satellite-heading">
+          <span class="badge">NASA HLS</span>
+          <h2 id="satellite-heading">Satellite monitoring</h2>
+          <p class="availability">Explore satellite vegetation maps and crop trends.</p>
+          <button class="primary" type="button" [routerLink]="['/plans', plan.id, 'satellite']">
+            Open satellite monitoring<img src="assets/home/arrow-right-light.svg" width="19" height="19" alt="" />
+          </button>
+        </section>
+      }
       <section class="saved-reports" aria-labelledby="reports-heading">
         <h2 id="reports-heading">Reported problems</h2>
         @if (reportResult.error) {

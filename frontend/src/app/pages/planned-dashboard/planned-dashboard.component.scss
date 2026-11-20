@@ -34,6 +34,8 @@ h2 { font-size: 24px; line-height: 1.4; }
 .start-action p { font-size: 12px; margin-top: 6px; }
 .tools { margin-top: 20px; padding: 12px 20px 15px; }
 .tools h2, .research h2 { font-size: 21px; }
+.satellite-monitoring { width: min(100%, 630px); margin-left: auto; }
+.satellite-monitoring h2, .satellite-monitoring button { margin-top: 8px; }
 .tool-buttons { margin-top: 12px; gap: 28px; }
 .tool-buttons button { background: #eef3ec; min-height: 54px; }
 .research { display: grid; grid-template-columns: minmax(0, 1fr) 229px; align-items: center; gap: 24px; padding: 15px 20px; border-radius: 19px; background: #0e3228; color: white; margin-top: 22px; }

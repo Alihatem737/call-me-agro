@@ -1,0 +1,123 @@
+<app-plan-header mode="NASA HLS" plansLabel="My Plans" />
+<main>
+  @if (plan; as field) {
+    <nav class="breadcrumb" aria-label="Breadcrumb"><a routerLink="/my-plans">My Plans</a> / {{ field.name }} / Satellite Monitoring</nav>
+    <h1>{{ unavailable ? 'Satellite imagery unavailable' : 'Satellite field monitoring' }}</h1>
+    <p class="muted">{{ unavailable ? 'Your field boundary is still saved.' : 'See vegetation changes across your field from NASA HLS satellite imagery.' }}</p>
+    <div class="panels">
+      <section class="panel" aria-label="Field map and observations">
+        <form class="range controls" (submit)="$event.preventDefault(); !loading && loadRange()">
+          <label>From <input type="date" name="start" required min="2013-01-01" [max]="today" [value]="startDate" (input)="startDate = $any($event.target).value" /></label>
+          <label>To <input type="date" name="end" required min="2013-01-01" [max]="today" [value]="endDate" (input)="endDate = $any($event.target).value" /></label>
+          <button type="submit" [disabled]="!!loading">Find dates</button>
+        </form>
+        @if (rangeError) { <p role="alert">{{ rangeError }}</p> }
+        <div class="controls">
+          @for (option of indicators; track option) {
+            <button type="button" [attr.aria-pressed]="indicator === option" [disabled]="!!loading" (click)="selectIndicator(option)">{{ option }}</button>
+          }
+          @if (dates.length) {
+            <label>Observation date (UTC)
+              <select [value]="selectedDate" [disabled]="!!loading" (change)="selectDate($any($event.target).value)">
+                @for (date of dates; track date) { <option [value]="date" [selected]="date === selectedDate">{{ date }}</option> }
+              </select>
+            </label>
+          }
+        </div>
+        @if (dates.length) { <p class="muted">Catalog dates are candidates. Field pixel quality is evaluated during analysis.</p> }
+        @if (analysis && analysis.observations.length > 1) {
+          <label class="granule">Source observation
+            <select [value]="selectedObservation?.id" (change)="selectObservation($any($event.target).value)">
+              @for (observation of analysis.observations; track observation.id) {
+                <option [value]="observation.id" [selected]="observation.id === selectedObservation?.id">{{ observation.id }}</option>
+              }
+            </select>
+          </label>
+        }
+        <div class="map-wrap" [class.unavailable]="unavailable">
+          <app-farm-map [coordinates]="field" [boundary]="field.fieldBoundary ?? null" [boundaryClosed]="true" [boundaryReadonly]="true"
+            [vegetationLayer]="selectedObservation?.status === 'COMPLETE' ? selectedObservation?.layer ?? null : null" />
+          @if (unavailable) {
+            <div class="map-message" role="status"><strong>No usable {{ indicator }} observation</strong>
+              <p>{{ unavailable }}</p>
+            </div>
+          }
+        </div>
+        @if (loading === 'dates') { <p role="status">Searching the NASA catalog…</p> }
+        @if (loading === 'analysis') { <p role="status">Checking field pixels for {{ selectedDate }}…</p> }
+        @if (failure && failure.step !== 'history') { <button type="button" (click)="retry()">Retry satellite request</button> }
+        @if (selectedObservation?.status === 'COMPLETE') {
+          <ul class="legend" [attr.aria-label]="indicator + ' color legend'">
+            @for (band of legend; track band.upper) { <li><span [style.background]="band.color"></span>{{ band.label }}</li> }
+          </ul>
+        }
+        <p class="muted">{{ selectedObservation?.source || 'NASA HLS-VI' }}
+          @if (resolution) { · {{ resolution }} m resolution }
+          @if (selectedObservation; as observation) { · Image date {{ observation.date }} (UTC) }
+        </p>
+      </section>
+      <div class="details">
+        <section class="panel" aria-labelledby="overview">
+          <h2 id="overview">{{ unavailable ? 'Why is this happening?' : 'Vegetation overview' }}</h2>
+          <p class="muted">{{ indicator }} · {{ indicatorDescription }}</p>
+          @if (selectedObservation; as observation) {
+            @if (observation.status === 'COMPLETE' && observation.statistics; as statistics) {
+              <p>Average {{ indicator }} <strong class="value">{{ statistics.mean | number:'1.2-4' }}</strong></p>
+              <p>Min {{ statistics.minimum | number:'1.2-4' }} · Max {{ statistics.maximum | number:'1.2-4' }} · Median {{ statistics.median | number:'1.2-4' }}</p>
+            }
+            @if (observation.status !== 'QUALITY_NOT_EVALUATED') {
+              <p>{{ observation.validPixels }} usable of {{ observation.fieldPixels }} whole field pixels</p>
+            }
+          }
+          @if (failure && failure.step !== 'history') {
+            <p class="muted" role="status">{{ failure.message }}</p>
+          } @else if (unavailable && dates.length) {
+            <p class="muted">Try another listed date when available.</p>
+          }
+        </section>
+        <section class="panel" aria-labelledby="history-heading">
+          <h2 id="history-heading">Vegetation history</h2>
+          <p class="muted">{{ indicator }} · {{ startDate === endDate ? 'Observations' : 'Mean per source observation' }}</p>
+          @if (loading === 'history') { <p role="status">Loading vegetation history…</p> }
+          @if (failure?.step === 'history') {
+            <p role="status">{{ failure?.message }}</p>
+            <button type="button" (click)="retry()">Retry history</button>
+          }
+          @if (historyPoints.length) {
+            <svg viewBox="0 0 300 120" role="img" [attr.aria-label]="indicator + ' history on a scale from minus 1 to 1'">
+              <path d="M10 10H290 M10 60H290 M10 110H290" stroke="#dce6dd" fill="none" />
+              <polyline [attr.points]="chartLine" stroke="#326344" stroke-width="2" fill="none" />
+              @for (point of historyPoints; track point.observation.id) {
+                <circle [attr.cx]="point.x" [attr.cy]="point.y" r="3" fill="#326344" />
+              }
+            </svg>
+            <details>
+              <summary>View observation values</summary>
+              <ul class="history-values">
+                @for (point of historyPoints; track point.observation.id) {
+                  <li>{{ point.observation.observedAt | date:'MMM d, y HH:mm:ss':'UTC' }} UTC · {{ point.observation.id }} · {{ point.observation.statistics?.mean | number:'1.2-4' }}</li>
+                }
+              </ul>
+            </details>
+          } @else if (history) {
+            <p>No usable vegetation history for this range.</p>
+          } @else if (!loading && failure?.step !== 'history') {
+            <p>Vegetation history is unavailable for this search.</p>
+          }
+        </section>
+        @if (limitations) {
+          <details class="panel"><summary>About these measurements</summary><p class="muted">{{ limitations }}</p></details>
+        }
+      </div>
+    </div>
+  } @else {
+    <h1>Field unavailable</h1>
+    <p>The saved growing plan or field boundary could not be opened.</p>
+  }
+</main>
+<footer>
+  <div>
+    <a [routerLink]="['/plans', id, 'dashboard']"><img src="assets/create-plan/arrow-left.svg" width="19" height="19" alt="" />Back to dashboard</a>
+    @if (plan) { <a class="primary" [routerLink]="['/plans', id, 'satellite', 'boundary']">Edit field boundary<img src="assets/home/arrow-right-light.svg" width="19" height="19" alt="" /></a> }
+  </div>
+</footer>

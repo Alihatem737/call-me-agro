@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { isCompletePlanningPlan, PlannedPlan } from '../models/planned-plan';
 import { GrowingPlan, isCompleteGrowingPlan } from '../models/growing-plan';
 import { calendarDate, localToday } from '../models/care-entry';
+import { FieldBoundary, isValidFieldBoundary } from '../models/field-boundary';
 
 export interface PlanSummary {
   id: string;
@@ -40,8 +41,22 @@ export class PlanStorageService {
     }
   }
 
-  loadDashboardPlan(id: string): { plan: PlannedPlan | GrowingPlan | null; error: string } {
-    const result = this.load();
+  updateFieldBoundary(id: string, fieldBoundary: FieldBoundary): string {
+    if (!isValidFieldBoundary(fieldBoundary)) return 'Draw a field boundary with at least three distinct corners and no crossing edges.';
+    const all = this.load();
+    const { plan, error } = this.loadDashboardPlan(id, all);
+    if (error) return error;
+    if (plan?.status !== 'growing') return 'Field boundaries can only be saved for a growing plan.';
+    try {
+      const updated = all.plans.map(value => value.id === id ? { ...plan, fieldBoundary } : value);
+      localStorage.setItem(PLANS_STORAGE_KEY, JSON.stringify(updated));
+      return '';
+    } catch {
+      return 'Your boundary could not be saved. Check browser storage and try again.';
+    }
+  }
+
+  loadDashboardPlan(id: string, result = this.load()): { plan: PlannedPlan | GrowingPlan | null; error: string } {
     if (result.error) return { plan: null, error: result.error };
     const record = result.plans.find(plan => plan.id === id);
     if (!record) return { plan: null, error: '' };

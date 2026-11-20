@@ -12,7 +12,7 @@ import { RouterLink } from '@angular/router';
     </a>
     <nav aria-label="Plan navigation">
       <a routerLink="/my-plans">{{ plansLabel }}</a>
-      <span class="mode" [class.growing]="mode === 'GROWING MODE' || mode === 'GROWING'">{{ mode }}</span>
+      <span class="mode" [class.growing]="mode === 'GROWING MODE' || mode === 'GROWING'" [class.satellite]="mode === 'NASA HLS'">{{ mode }}</span>
     </nav>
   </header>`,
   styleUrl: './plan-header.component.scss',

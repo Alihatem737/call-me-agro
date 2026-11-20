@@ -18,6 +18,8 @@ import { PlantingDateComponent, notFutureDate } from './pages/planting-date/plan
 import { CurrentCropComponent } from './pages/current-crop/current-crop.component';
 import { BiologicComponent } from './pages/biologic/biologic.component';
 import { leavePlanGuard } from './services/leave-plan.service';
+import { PlanStorageService } from './services/plan-storage.service';
+import { isValidFieldBoundary } from './models/field-boundary';
 
 const requirePlanName: CanActivateFn = route => {
   const growing = route.data['journey'] === 'already-planted';
@@ -25,7 +27,33 @@ const requirePlanName: CanActivateFn = route => {
   return draft.name.trim() ? true : inject(Router).createUrlTree([`/create-plan/${growing ? 'growing' : 'planning'}/plan-name`]);
 };
 
+const requireGrowingPlan: CanActivateFn = route => {
+  const id = route.paramMap.get('id')!;
+  const { plan } = inject(PlanStorageService).loadDashboardPlan(id);
+  return plan?.status === 'growing' || inject(Router).createUrlTree(['/plans', id, 'dashboard']);
+};
+
+const requireMonitoringBoundary: CanActivateFn = route => {
+  const id = route.paramMap.get('id')!;
+  const { plan } = inject(PlanStorageService).loadDashboardPlan(id);
+  const router = inject(Router);
+  if (plan?.status !== 'growing') return router.createUrlTree(['/plans', id, 'dashboard']);
+  return isValidFieldBoundary(plan.fieldBoundary) || router.createUrlTree(['/plans', id, 'satellite', 'boundary']);
+};
+
 export const routes: Routes = [
+  {
+    path: 'plans/:id/satellite',
+    title: 'Satellite Field Monitoring | Call me Agro',
+    loadComponent: () => import('./pages/satellite-monitoring/satellite-monitoring.component').then(page => page.SatelliteMonitoringComponent),
+    canActivate: [requireMonitoringBoundary],
+  },
+  {
+    path: 'plans/:id/satellite/boundary',
+    title: 'Draw Field Boundary | Call me Agro',
+    loadComponent: () => import('./pages/field-boundary/field-boundary.component').then(page => page.FieldBoundaryComponent),
+    canActivate: [requireGrowingPlan],
+  },
   { path: 'plans/:id/biologic', component: BiologicComponent, title: 'BioLogic | Call me Agro' },
   {
     path: 'create-plan/growing/current-crop', component: CurrentCropComponent, title: 'Current Crop | Call me Agro',

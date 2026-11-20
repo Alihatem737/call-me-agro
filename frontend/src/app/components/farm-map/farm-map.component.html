@@ -1,6 +1,11 @@
 <div class="farm-map">
-  <div #canvas class="map-canvas" role="region" aria-label="Farm location map. Click to select, drag to pan, or use arrow keys and Select map center." tabindex="0"></div>
-  <button class="select-center" type="button" (click)="selectCenter()">Select map center</button>
+  <div #canvas class="map-canvas" role="region" [attr.aria-label]="boundary === null
+    ? 'Farm location map. Click to select, drag to pan, or use arrow keys and Select map center.'
+    : boundaryReadonly ? 'Satellite field map. Use arrow keys to pan and plus or minus to zoom.'
+    : 'Field boundary map. Click to add corners or drag existing corners to move them.'" tabindex="0"></div>
+  @if (!boundaryClosed && !boundaryReadonly) {
+    <button class="select-center" type="button" (click)="selectCenter()">{{ boundary === null ? 'Select map center' : 'Add corner at map center' }}</button>
+  }
   @if (loading && !tileError) { <span class="map-feedback" role="status">Loading map…</span> }
   @if (tileError) {
     <div class="map-feedback map-error" role="status">

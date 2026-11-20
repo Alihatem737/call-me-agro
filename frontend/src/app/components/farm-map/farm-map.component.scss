@@ -8,5 +8,6 @@ app-farm-map { display: block; min-width: 0; }
 .farm-map .leaflet-control-zoom a { color: #0e3228; }
 .farm-map .leaflet-tooltip { color: #0e3228; border: 0; border-radius: 9px; padding: 7px 12px; font: 600 12px 'DM Sans', sans-serif; }
 .farm-map .farm-map-pin > img { display: block; }
+.farm-map .field-map-vertex { background: white; border: 3px solid #0e3228; border-radius: 50%; }
 .farm-map .farm-map-pin .pin-center { position: absolute; left: 14px; top: 14px; }
 .farm-map button:focus-visible, .farm-map .map-canvas:focus-visible { outline: 3px solid #0e3228; outline-offset: 3px; }

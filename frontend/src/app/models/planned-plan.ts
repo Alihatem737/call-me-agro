@@ -1,4 +1,5 @@
 import type { ComparisonCrop } from '../services/plan-draft.service';
+import type { FieldBoundary } from './field-boundary';
 
 export interface PlannedPlan {
   id: string;
@@ -12,6 +13,7 @@ export interface PlannedPlan {
   status: 'planned' | 'growing';
   plantingDate?: string;
   harvestDate?: string;
+  fieldBoundary?: FieldBoundary;
 }
 
 export function isCompletePlanningPlan(plan: PlannedPlan): boolean {
