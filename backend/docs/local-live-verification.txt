@@ -1,0 +1,11 @@
+Verified live on 2026-11-20 using Java 17 and the local secret loader.
+NASA source: HLS-VI.S30.T43RCQ.2025144T054701.v2.0 (2025-05-24).
+Test polygon: longitude 73.000-73.008, latitude 31.400-31.408.
+NDVI and NDMI field-analysis and single-day vegetation-history: COMPLETE.
+687 field-contained pixels, 411 valid pixels; 411 GeoJSON polygon features per analysis.
+NDVI mean 0.16799756690997567; NDMI mean -0.053961557177615575.
+History matches analysis statistics. GeoJSON values reproduce the reported means.
+Cloud-obscured and insufficient-coverage observations were correctly withheld.
+All 144 backend tests passed; Maven package succeeded.
+NASA POWER climate, summary, planting-summary endpoints returned HTTP 200.
+No credentials included in this report or the recorded API responses.
